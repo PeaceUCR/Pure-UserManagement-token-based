@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Management</title>
+    <link rel="shortcut icon" type="image/ico" href="/favicon.ico"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <style>
+        .error{
+            color: red;
+        }
+        #user-table{
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .user-line{
+            margin-top: 10px;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            align-items: center;
+
+        }
+        .user-line:hover .col>:nth-child(2) {
+            background-color: lightcoral;
+        }
+
+        .user-line>i{
+            cursor: pointer;
+            transition: all 0.5s ease;
+        }
+        .user-line:hover>i{
+            transform: scale(1.2);
+            color: red;
+        }
+
+        .user-line .col{
+            display: flex;
+            flex-direction: column;
+        }
+        .user-line .col span{
+            padding: 2px 10px 2px 2px;
+            border-right: 1px solid #5E6472;
+            transition: all 0.5s ease;
+        }
+
+        .user-line .col> :first-child{
+            background-color: #ececec;
+        }
+    </style>
+</head>
+<body>
+<h1>User Management</h1>
+<p id="status"></p>
+<div id="user-table"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script>
+    // Show/hide password onClick of button using Javascript only
+
+    // https://stackoverflow.com/questions/31224651/show-hide-password-onclick-of-button-using-javascript-only
+
+    $(document).ready(function() {
+
+        function refresh() {
+            var token = new URL(window.location.href).searchParams.get("token");
+            var table =  $("#user-table");
+            table.empty();
+            $.ajax({
+                type: "GET",
+                url: "/api/users/all",
+                headers: {
+                    'Authorization':'Bearer '+token
+                },
+                processData: false,
+                success: function(data) {
+                    console.log(data);
+                    if(data&&data.length>0){
+                        data.forEach(function (item, index, items) {
+                            var line = $("<div class='user-line'><i class=\"fas fa-trash-alt\"></i></div>");
+                            Object.keys(item).forEach(function (key) {
+                                var keyValue = $("<div class='col'><span>"+key+"</span>"+"<span>"+item[key]+"</span></div>");
+                                line.append(keyValue);
+                            });
+
+                            line.find("i").click(function () {
+                                console.log(item["email"]) ;
+                                $.ajax({
+                                    type: "DELETE",
+                                    url: "/api/users/delete",
+                                    headers: {
+                                        'Authorization':'Bearer '+token,
+                                        'Content-Type':'application/json'
+                                    },
+                                    //https://stackoverflow.com/questions/13565522/jacskon-parser-unrecognized-token-tiehet-was-expecting-null-true-or-f
+                                    //must in this format, otherwise back end can't recognize
+                                    data:JSON.stringify({"email":item["email"]}),
+                                    success: function() {
+                                        refresh();
+                                    },
+                                    error: function () {
+                                        $("#status").removeClass();
+                                        $("#status").addClass("error");
+                                        $("#status").text("Ooh!Some errors here, please try again later");
+                                    }
+                                });
+                            });
+                            table.append(line);
+                        });
+                    }
+                },
+                error: function () {
+                    $("#status").removeClass();
+                    $("#status").addClass("error");
+                    $("#status").text("Ooh!Some errors here, please add valid token in URL");
+                }
+            });
+        }
+//https://stackoverflow.com/questions/10093053/add-header-in-ajax-request-with-jquery
+        refresh();
+    });
+
+
+
+
+</script>
+</body>
+</html>
