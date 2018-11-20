@@ -14,6 +14,10 @@ Ultimate doc for the view mapping to the static html file
     //https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-developing-web-applications.html#boot-features-spring-mvc-static-content
     //https://stackoverflow.com/questions/37498305/spring-boot-url-mapping-for-static-html?rq=1
    
+JSP view mapping seems not for html
+
+https://www.udemy.com/java-spring-framework-masterclass/learn/v4/t/lecture/10640070?start=0
+https://stackoverflow.com/questions/16598594/how-to-map-requests-to-html-file-in-spring-mvc
 
 # InDepth Development 
 **from https://github.com/PeaceUCR/SpringSecurityJWT and https://github.com/PeaceUCR/MyStore**
