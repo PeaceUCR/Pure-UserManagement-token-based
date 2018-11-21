@@ -1,7 +1,9 @@
 JSON Web Token GetStart
 SpringBoot + SpringSecurity + JWT + Postgres
 
-User management token based
+User management token based(Please note the CSRF not in JWT based, refer to 
+https://www.baeldung.com/spring-security-csrf
+https://security.stackexchange.com/questions/170388/do-i-need-csrf-token-if-im-using-bearer-jwt)
 
 Ultimate doc for the view mapping to the static html file
     
